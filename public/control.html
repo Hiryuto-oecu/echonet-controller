@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>エアコン操作</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; padding: 20px; background-color: #f4f7f9; color: #333; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #005a9c; }
+        button { padding: 10px 15px; font-size: 15px; cursor: pointer; background-color: #007bff; color: white; border: none; border-radius: 5px; transition: background-color 0.3s; }
+        a { color: #007bff; }
+        #device-details { display: flex; justify-content: space-between; flex-wrap: wrap; }
+        .status-main, .status-sensors { flex: 1; min-width: 250px; }
+        .status-sensors { padding-left: 20px; border-left: 1px solid #eee; }
+        #device-details p { margin: 10px 0; font-size: 16px; }
+        #device-details strong { display: inline-block; width: 120px; color: #555; }
+        .control-panel { margin-top: 15px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; }
+        .control-panel:last-child { border-bottom: none; }
+        .control-panel button { margin: 5px; }
+        .control-panel strong { display: block; margin-bottom: 8px; font-size: 1.1em; color: #333; }
+        /* 初期状態で風向パネルを非表示にするスタイルを追加 */
+        .fan-direction-ud-controls, .fan-direction-lr-controls {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <p><a href="/">&laquo; 端末一覧に戻る</a></p>
+        <h1 id="device-ip-title">エアコン操作</h1>
+        
+        <div id="device-details">
+            <div class="status-main">
+                <p><strong>動作状態:</strong> <span id="detail-power">取得中...</span></p>
+                <p><strong>運転モード:</strong> <span id="detail-mode">取得中...</span></p>
+                <p><strong>設定温度:</strong> <span id="detail-temp">取得中...</span></p>
+                <p><strong>風量設定:</strong> <span id="detail-fan-speed">取得中...</span></p>
+                <p><strong>風向(上下):</strong> <span id="detail-fan-direction-ud">取得中...</span></p>
+                <p><strong>風向(左右):</strong> <span id="detail-fan-direction-lr">取得中...</span></p>
+            </div>
+            <div class="status-sensors">
+                <p><strong>室内温度:</strong> <span id="detail-temp-room">取得中...</span></p>
+                <p><strong>室外温度:</strong> <span id="detail-temp-outdoor">取得中...</span></p>
+                <p><strong>室内しつど:</strong> <span id="detail-humidity">取得中...</span></p>
+            </div>
+        </div>
+        
+        <div class="control-panel power-controls">
+            <strong>電源</strong>
+            <button data-epc="80" data-edt="30">ON</button>
+            <button data-epc="80" data-edt="31">OFF</button>
+        </div>
+        <div class="control-panel mode-controls">
+            <strong>運転モード</strong>
+            <button data-epc="B0" data-edt="42">冷房</button>
+            <button data-epc="B0" data-edt="43">暖房</button>
+            <button data-epc="B0" data-edt="44">除湿</button>
+            <button data-epc="B0" data-edt="41">自動</button>
+        </div>
+        <div class="control-panel temp-controls">
+            <strong>設定温度</strong>
+            <input type="number" id="temp-input" min="16" max="30" step="1" style="width: 60px; text-align: center; font-size: 16px; padding: 8px;">
+            <button id="set-temp-btn">設定</button>
+        </div>
+        <div class="control-panel fan-speed-controls">
+            <strong>風量</strong>
+            <button data-epc="A0" data-edt="41">自動</button>
+            <button data-epc="A0" data-edt="31">1 (静)</button>
+            <button data-epc="A0" data-edt="32">2</button>
+            <button data-epc="A0" data-edt="33">3</button>
+            <button data-epc="A0" data-edt="34">4</button>
+            <button data-epc="A0" data-edt="35">5 (強)</button>
+        </div>
+        <div class="control-panel fan-direction-ud-controls">
+            <strong>風向 (上下)</strong>
+            <button data-epc="A4" data-edt="41">上</button>
+            <button data-epc="A4" data-edt="44">上中</button>
+            <button data-epc="A4" data-edt="43">中央</button>
+            <button data-epc="A4" data-edt="45">下中</button>
+            <button data-epc="A4" data-edt="42">下</button>
+        </div>
+        <div class="control-panel fan-direction-lr-controls">
+            <strong>風向 (左右)</strong>
+            <button data-epc="A5" data-edt="42">左</button>
+            <button data-epc="A5" data-edt="43">中央</button>
+            <button data-epc="A5" data-edt="41">右</button>
+            <button data-epc="A5" data-edt="44">左右</button>
+        </div>
+        <p id="control-status"></p>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="control.js"></script>
+</body>
+</html>
