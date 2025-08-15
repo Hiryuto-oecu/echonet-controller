@@ -77,7 +77,7 @@ echonet-controller/
 
 ## ライセンス
 
-ISC License
+MIT License
 
 ## 貢献
 
